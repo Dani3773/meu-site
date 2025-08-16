@@ -2,6 +2,7 @@
 
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import useLanguageStore from '@/store/languageStore';
+import Link from 'next/link';
 
 const messages = {
   pt: {
@@ -36,9 +37,9 @@ export default function Home() {
       </section>
 
       <nav className="mt-6 flex gap-4 underline">
-        <a href="/pt">/pt</a>
-        <a href="/en">/en</a>
-        <a href="/de">/de</a>
+        <Link href="/pt">PT</Link>
+        <Link href="/en">EN</Link>
+        <Link href="/de">DE</Link>
       </nav>
     </main>
   );
