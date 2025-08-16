@@ -1,9 +1,9 @@
 "use client";
 
-import './globals.css';
 import useLanguageStore from '@/store/languageStore';
+import type {ReactNode} from 'react';
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function LocaleLayout({children}: {children: ReactNode}) {
   const { currentLanguage } = useLanguageStore();
 
   return (
