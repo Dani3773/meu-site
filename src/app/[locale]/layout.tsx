@@ -1,6 +1,8 @@
-// src/app/[locale]/layout.tsx
+// src/app/[locale]/Layout.tsx
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+
+export const dynamic = "force-static";
 
 const TEXTS = {
   pt: {
@@ -17,40 +19,43 @@ const TEXTS = {
   },
 } as const;
 
-const BASE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
+const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
 
-export async function generateMetadata(
-  { params }: { params: { locale: "pt" | "en" | "de" } }
-): Promise<Metadata> {
-  const l = params.locale;
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const l = (params.locale ?? "pt") as keyof typeof TEXTS;
   const t = TEXTS[l];
+  const canonical = `${BASE}/${l}`;
 
   return {
     title: t.title,
     description: t.desc,
     alternates: {
-      canonical: `${BASE_URL}/${l}`,
+      canonical,
       languages: {
-        pt: `${BASE_URL}/pt`,
-        en: `${BASE_URL}/en`,
-        de: `${BASE_URL}/de`,
-        "x-default": BASE_URL,
+        pt: `${BASE}/pt`,
+        en: `${BASE}/en`,
+        de: `${BASE}/de`,
+        "x-default": BASE,
       },
     },
     openGraph: {
       type: "website",
-      url: `${BASE_URL}/${l}`,
+      url: canonical,
       siteName: "Daniel Felisberto",
       title: t.title,
       description: t.desc,
-      images: [`${BASE_URL}/og-${l}.png`],
+      images: [`${BASE}/og-${l}.png`],
       locale: l,
     },
     twitter: {
       card: "summary_large_image",
       title: t.title,
       description: t.desc,
-      images: [`${BASE_URL}/og-${l}.png`],
+      images: [`${BASE}/og-${l}.png`],
     },
   };
 }
