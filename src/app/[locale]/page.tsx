@@ -19,16 +19,6 @@ const messages = {
   },
 };
 
-export function generateMetadata({ params }: { params: { locale: string } }) {
-  const { locale } = params;
-  const { title, description } = messages[locale as keyof typeof messages];
-
-  return {
-    title,
-    description,
-  };
-}
-
 export default function Home() {
   const { currentLanguage } = useLanguageStore();
   const { title, description } = messages[currentLanguage];
