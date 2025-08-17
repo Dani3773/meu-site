@@ -1,5 +1,3 @@
-"use client";
-
 import useLanguageStore from '@/store/languageStore';
 import { Metadata } from "next";
 
