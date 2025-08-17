@@ -1,7 +1,5 @@
-// src/app/[locale]/layout.tsx
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import type { LayoutProps } from "@/types"; // <- Você ainda vai criar isso abaixo 👇
 
 // Textos por idioma
 const TEXTS = {
@@ -19,13 +17,16 @@ const TEXTS = {
   },
 } as const;
 
-const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
+const BASE =
+  (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
 
 // Função de metadados multilíngue
-export function generateMetadata({
+export async function generateMetadata({
   params,
-}: LayoutProps): Metadata {
-  const l = params.locale ?? "pt";
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const l = (params.locale ?? "pt") as keyof typeof TEXTS;
   const t = TEXTS[l];
   const canonical = `${BASE}/${l}`;
 
@@ -59,11 +60,14 @@ export function generateMetadata({
   };
 }
 
-// Componente de layout multilíngue
+// Layout multilíngue (sem Zustand aqui!)
 export default function LocaleLayout({
   children,
   params,
-}: LayoutProps & { children: ReactNode }) {
+}: {
+  children: ReactNode;
+  params: { locale: string };
+}) {
   return (
     <html lang={params.locale}>
       <body>{children}</body>
