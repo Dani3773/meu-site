@@ -50,6 +50,7 @@ export default function Home() {
         <Link href="/pt">PT</Link>
         <Link href="/en">EN</Link>
         <Link href="/de">DE</Link>
+        <Link href="/resume">Resume</Link>
       </nav>
     </main>
   );
