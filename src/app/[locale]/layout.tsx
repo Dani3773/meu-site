@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-// Textos por idioma (ajuste os títulos/descrições conforme sua palavra-chave)
+// Textos por idioma
 const TEXTS = {
   pt: {
     title: "Daniel Felisberto — Java & Web (PT)",
@@ -18,16 +18,11 @@ const TEXTS = {
   },
 } as const;
 
-const BASE =
-  (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
+const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
 
-// Metadata por idioma (server-side)
-export function generateMetadata({
-  params,
-}: {
-  params: { locale: "pt" | "en" | "de" };
-}): Metadata {
-  const l = params.locale ?? "pt";
+// Corrigir generateMetadata para aceitar { params }: { params: { locale: string } }
+export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
+  const l = (params.locale as "pt" | "en" | "de") ?? "pt";
   const t = TEXTS[l];
   const canonical = `${BASE}/${l}`;
 
@@ -49,7 +44,7 @@ export function generateMetadata({
       siteName: "Daniel Felisberto",
       title: t.title,
       description: t.desc,
-      images: [`${BASE}/og-${l}.png`], // opcional: gere uma imagem por idioma em /public
+      images: [`${BASE}/og-${l}.png`],
       locale: l,
     },
     twitter: {
@@ -61,16 +56,14 @@ export function generateMetadata({
   };
 }
 
-// Layout por idioma (server). Nada de Zustand aqui.
+// Layout server-side correto
 export default function LocaleLayout({
   children,
-  params,
 }: {
   children: ReactNode;
-  params: { locale: "pt" | "en" | "de" };
 }) {
   return (
-    <html lang={params.locale}>
+    <html>
       <body>{children}</body>
     </html>
   );
