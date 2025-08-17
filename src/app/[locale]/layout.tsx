@@ -1,3 +1,4 @@
+// src/app/[locale]/layout.tsx
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
@@ -17,13 +18,14 @@ const TEXTS = {
   },
 } as const;
 
-const BASE =
-  (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
+const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
 
-// ✅ FUNÇÃO METADATA (não toque em Layout aqui dentro!)
-export async function generateMetadata(
-  { params }: { params: { locale: string } }
-): Promise<Metadata> {
+// ✅ 1. generateMetadata (server-side)
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
   const l = (params.locale ?? "pt") as keyof typeof TEXTS;
   const t = TEXTS[l];
   const canonical = `${BASE}/${l}`;
@@ -58,16 +60,17 @@ export async function generateMetadata(
   };
 }
 
-// ✅ LAYOUT COMPONENTE (export default separado da metadata)
-export default function LocaleLayout(
-  props: {
-    children: ReactNode;
-    params: { locale: string };
-  }
-) {
+// ✅ 2. Componente do layout (server component)
+export default function LocaleLayout({
+  children,
+  params,
+}: {
+  children: ReactNode;
+  params: { locale: string };
+}) {
   return (
-    <html lang={props.params.locale}>
-      <body>{props.children}</body>
+    <html lang={params.locale}>
+      <body>{children}</body>
     </html>
   );
 }
