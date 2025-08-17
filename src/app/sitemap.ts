@@ -28,3 +28,7 @@ export function getSitemap() {
     },
   });
 }
+
+export default function handler() {
+  return getSitemap();
+}
