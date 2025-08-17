@@ -1,12 +1,7 @@
+// src/app/[locale]/layout.tsx
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-type Props = {
-  children: ReactNode;
-  params: { locale: "pt" | "en" | "de" };
-};
-
-// Textos por idioma
 const TEXTS = {
   pt: {
     title: "Daniel Felisberto — Java & Web (PT)",
@@ -24,8 +19,9 @@ const TEXTS = {
 
 const BASE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
 
-// ✅ METADATA DINÂMICA
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: { params: { locale: "pt" | "en" | "de" } }
+): Promise<Metadata> {
   const l = params.locale;
   const t = TEXTS[l];
 
@@ -59,8 +55,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// ✅ LAYOUT DO IDIOMA
-export default function LocaleLayout({ children, params }: Props) {
+export default function LocaleLayout({
+  children,
+  params,
+}: {
+  children: ReactNode;
+  params: { locale: "pt" | "en" | "de" };
+}) {
   return (
     <html lang={params.locale}>
       <body>{children}</body>
