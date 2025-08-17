@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'edge';
 
-export function GET() {
+export function getRobots() {
   const robots = `User-agent: *
 Disallow:
 
