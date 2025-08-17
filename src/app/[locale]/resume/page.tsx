@@ -1,77 +1,47 @@
-import useLanguageStore from '@/store/languageStore';
-import { Metadata } from "next";
+"use client";
 
-const resumeContent = {
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import useLanguageStore from '@/store/languageStore';
+import Link from 'next/link';
+
+const messages = {
   pt: {
-    title: 'Currículo',
-    content: 'Este é o meu currículo. Aqui você encontrará informações sobre minha experiência, educação e habilidades.',
-    ogImage: "/og-pt.png",
+    title: 'Bem-vindo',
+    description: 'Este é um exemplo de aplicação multilíngue.',
   },
   en: {
-    title: 'Resume',
-    content: 'This is my resume. Here you will find information about my experience, education, and skills.',
-    ogImage: "/og-en.png",
+    title: 'Welcome',
+    description: 'This is a multilingual application example.',
   },
   de: {
-    title: 'Lebenslauf',
-    content: 'Dies ist mein Lebenslauf. Hier finden Sie Informationen über meine Erfahrung, Ausbildung und Fähigkeiten.',
-    ogImage: "/og-de.png",
+    title: 'Willkommen',
+    description: 'Dies ist ein Beispiel für eine mehrsprachige Anwendung.',
   },
 };
 
-export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
-  const messages = {
-    pt: {
-      title: "Currículo",
-      description: "Este é o meu currículo. Aqui você encontrará informações sobre minha experiência, educação e habilidades.",
-      ogImage: "/og-pt.png",
-    },
-    en: {
-      title: "Resume",
-      description: "This is my resume. Here you will find information about my experience, education, and skills.",
-      ogImage: "/og-en.png",
-    },
-    de: {
-      title: "Lebenslauf",
-      description: "Dies ist mein Lebenslauf. Hier finden Sie Informationen über meine Erfahrung, Ausbildung und Fähigkeiten.",
-      ogImage: "/og-de.png",
-    },
-  };
-
-  const { locale } = params;
-  const msg = messages[locale as "pt"|"en"|"de"] ?? messages.en;
-
-  return {
-    title: msg.title,
-    description: msg.description,
-    openGraph: {
-      title: msg.title,
-      description: msg.description,
-      url: `https://meu-site.com/${locale}/resume`,
-      images: [{ url: msg.ogImage }],
-      siteName: "Daniel Felisberto",
-      locale,
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: msg.title,
-      description: msg.description,
-      images: [msg.ogImage],
-    },
-  };
-}
-
-export default function Resume() {
+export default function Home() {
   const { currentLanguage } = useLanguageStore();
-  const { title, content } = resumeContent[currentLanguage];
+  const { title, description } = messages[currentLanguage];
 
   return (
     <main className="mx-auto max-w-3xl p-6 space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold">{title}</h1>
+      <header className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">{title} ({currentLanguage.toUpperCase()})</h1>
+        <LanguageSwitcher />
       </header>
-      <p className="text-lg">{content}</p>
+
+      <p className="text-lg">{description}</p>
+
+      <section className="rounded-lg border p-4 text-sm">
+        <div><strong>Idioma atual:</strong> <code>{currentLanguage}</code></div>
+      </section>
+
+      <nav className="mt-6 flex gap-4 underline">
+        <Link href="/pt">PT</Link>
+        <Link href="/en">EN</Link>
+        <Link href="/de">DE</Link>
+        <Link href="/resume">Resume</Link>
+      </nav>
     </main>
   );
 }
