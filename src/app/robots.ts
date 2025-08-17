@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export const GET = async () => {
   const robots = `User-agent: *
 Disallow:
 
@@ -11,4 +11,4 @@ Sitemap: ${process.env.NEXT_PUBLIC_SITE_URL}/sitemap.xml`;
       'Content-Type': 'text/plain',
     },
   });
-}
+};
