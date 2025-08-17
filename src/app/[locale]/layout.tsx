@@ -1,6 +1,10 @@
-// src/app/[locale]/layout.tsx
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+
+type Props = {
+  children: ReactNode;
+  params: { locale: "pt" | "en" | "de" };
+};
 
 // Textos por idioma
 const TEXTS = {
@@ -18,56 +22,45 @@ const TEXTS = {
   },
 } as const;
 
-const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
+const BASE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
 
-// ✅ 1. generateMetadata (server-side)
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const l = (params.locale ?? "pt") as keyof typeof TEXTS;
+// ✅ METADATA DINÂMICA
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const l = params.locale;
   const t = TEXTS[l];
-  const canonical = `${BASE}/${l}`;
 
   return {
     title: t.title,
     description: t.desc,
     alternates: {
-      canonical,
+      canonical: `${BASE_URL}/${l}`,
       languages: {
-        pt: `${BASE}/pt`,
-        en: `${BASE}/en`,
-        de: `${BASE}/de`,
-        "x-default": BASE,
+        pt: `${BASE_URL}/pt`,
+        en: `${BASE_URL}/en`,
+        de: `${BASE_URL}/de`,
+        "x-default": BASE_URL,
       },
     },
     openGraph: {
       type: "website",
-      url: canonical,
+      url: `${BASE_URL}/${l}`,
       siteName: "Daniel Felisberto",
       title: t.title,
       description: t.desc,
-      images: [`${BASE}/og-${l}.png`],
+      images: [`${BASE_URL}/og-${l}.png`],
       locale: l,
     },
     twitter: {
       card: "summary_large_image",
       title: t.title,
       description: t.desc,
-      images: [`${BASE}/og-${l}.png`],
+      images: [`${BASE_URL}/og-${l}.png`],
     },
   };
 }
 
-// ✅ 2. Componente do layout (server component)
-export default function LocaleLayout({
-  children,
-  params,
-}: {
-  children: ReactNode;
-  params: { locale: string };
-}) {
+// ✅ LAYOUT DO IDIOMA
+export default function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={params.locale}>
       <body>{children}</body>
