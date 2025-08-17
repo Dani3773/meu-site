@@ -6,7 +6,7 @@ import useLanguageStore from '@/store/languageStore';
 export default function RootLayout({children}: {children: React.ReactNode}) {
   const { currentLanguage } = useLanguageStore();
 
-  const baseUrl = 'https://meu-site.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
   const alternateLinks = [
     { href: `${baseUrl}/pt`, hrefLang: 'pt' },
     { href: `${baseUrl}/en`, hrefLang: 'en' },
@@ -49,6 +49,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <meta property="og:url" content={`${baseUrl}/${currentLanguage}`} />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
+        <script async defer data-domain="meu-site.com" src="https://plausible.io/js/plausible.js"></script>
       </head>
       <body>{children}</body>
     </html>
