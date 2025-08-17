@@ -1,5 +1,3 @@
-"use client";
-
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import useLanguageStore from '@/store/languageStore';
 import Link from 'next/link';
