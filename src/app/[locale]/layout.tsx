@@ -20,12 +20,10 @@ const TEXTS = {
 const BASE =
   (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
 
-// Função de metadados multilíngue
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
+// ✅ FUNÇÃO METADATA (não toque em Layout aqui dentro!)
+export async function generateMetadata(
+  { params }: { params: { locale: string } }
+): Promise<Metadata> {
   const l = (params.locale ?? "pt") as keyof typeof TEXTS;
   const t = TEXTS[l];
   const canonical = `${BASE}/${l}`;
@@ -60,17 +58,16 @@ export async function generateMetadata({
   };
 }
 
-// Layout multilíngue (sem Zustand aqui!)
-export default function LocaleLayout({
-  children,
-  params,
-}: {
-  children: ReactNode;
-  params: { locale: string };
-}) {
+// ✅ LAYOUT COMPONENTE (export default separado da metadata)
+export default function LocaleLayout(
+  props: {
+    children: ReactNode;
+    params: { locale: string };
+  }
+) {
   return (
-    <html lang={params.locale}>
-      <body>{children}</body>
+    <html lang={props.params.locale}>
+      <body>{props.children}</body>
     </html>
   );
 }
