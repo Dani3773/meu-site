@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-export const GET = async () => {
+export function GET() {
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -25,4 +25,4 @@ export const GET = async () => {
       'Content-Type': 'application/xml',
     },
   });
-};
+}
