@@ -19,16 +19,6 @@ const resumeContent = {
   },
 };
 
-export function generateMetadata({ params }: { params: { locale: string } }) {
-  const { locale } = params;
-  const { title } = resumeContent[locale as keyof typeof resumeContent];
-
-  return {
-    title,
-    description: `Página de currículo em ${locale}`,
-  };
-}
-
 export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
   const messages = {
     pt: {
