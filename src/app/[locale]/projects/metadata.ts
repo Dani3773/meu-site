@@ -1,11 +1,7 @@
-﻿import { locales } from '@/i18n/routing';
+import { locales } from '@/i18n/routing';
 import { getDictionary } from '../translations';
 
-interface MetadataParams {
-  params: {
-    locale: string;
-  };
-}
+type LocalePromise = Promise<{ locale: string }>;
 
 const canonicalPath = '/projects';
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? '';
@@ -22,8 +18,8 @@ function localeProjectsPath(locale: string) {
   return `/${locale}/projects`;
 }
 
-export function generateMetadata({ params }: MetadataParams) {
-  const { locale } = params;
+export async function generateMetadata({ params }: { params: LocalePromise }) {
+  const { locale } = await params;
   const dictionary = getDictionary(locale);
   const copy = dictionary.pages.projects;
 

@@ -1,17 +1,14 @@
-﻿import { getDictionary } from './translations';
+import { getDictionary } from './translations';
 
-interface MetadataParams {
-  params: {
-    locale: string;
-  };
-}
+type LocalePromise = Promise<{ locale: string }>;
 
-export function generateMetadata({ params }: MetadataParams) {
-  const dictionary = getDictionary(params.locale);
-  const { title, description } = dictionary.pages.home;
+export async function generateMetadata({ params }: { params: LocalePromise }) {
+  const { locale } = await params;
+  const dictionary = getDictionary(locale);
+  const copy = dictionary.pages.home;
 
   return {
-    title,
-    description,
+    title: copy.title,
+    description: copy.description,
   };
 }

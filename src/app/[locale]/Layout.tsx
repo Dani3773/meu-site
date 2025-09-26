@@ -1,17 +1,9 @@
-﻿"use client";
-
-import { ReactNode, useEffect, useMemo } from 'react';
+import { ReactNode } from 'react';
 import Link from 'next/link';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
-import useLanguageStore from '@/store/languageStore';
 import { getDictionary } from './translations';
 
-interface LocaleLayoutProps {
-  children: ReactNode;
-  params: {
-    locale: string;
-  };
-}
+type LocalePromise = Promise<{ locale: string }>;
 
 type NavKey = 'home' | 'about' | 'projects' | 'contact';
 
@@ -39,15 +31,14 @@ const navItems: NavItem[] = [
   },
 ];
 
-export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
-  const { locale } = params;
-  const dictionary = useMemo(() => getDictionary(locale), [locale]);
+interface LocaleLayoutProps {
+  children: ReactNode;
+  params: LocalePromise;
+}
 
-  const { setLanguage } = useLanguageStore();
-
-  useEffect(() => {
-    setLanguage(locale);
-  }, [locale, setLanguage]);
+export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
+  const { locale } = await params;
+  const dictionary = getDictionary(locale);
 
   return (
     <main className="mx-auto max-w-3xl space-y-6 p-6">

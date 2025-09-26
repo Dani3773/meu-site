@@ -1,13 +1,10 @@
-﻿import { getDictionary } from '../translations';
+import { getDictionary } from '../translations';
 
-interface AboutPageProps {
-  params: {
-    locale: string;
-  };
-}
+type LocalePromise = Promise<{ locale: string }>;
 
-export default function AboutPage({ params }: AboutPageProps) {
-  const dictionary = getDictionary(params.locale);
+export default async function AboutPage({ params }: { params: LocalePromise }) {
+  const { locale } = await params;
+  const dictionary = getDictionary(locale);
   const copy = dictionary.pages.about;
 
   return (

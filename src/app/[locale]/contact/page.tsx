@@ -1,13 +1,10 @@
-﻿import { getDictionary } from '../translations';
+import { getDictionary } from '../translations';
 
-interface ContactPageProps {
-  params: {
-    locale: string;
-  };
-}
+type LocalePromise = Promise<{ locale: string }>;
 
-export default function ContactPage({ params }: ContactPageProps) {
-  const dictionary = getDictionary(params.locale);
+export default async function ContactPage({ params }: { params: LocalePromise }) {
+  const { locale } = await params;
+  const dictionary = getDictionary(locale);
   const copy = dictionary.pages.contact;
 
   return (

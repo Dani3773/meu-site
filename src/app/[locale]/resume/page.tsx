@@ -1,13 +1,10 @@
-﻿import { getDictionary } from '../translations';
+import { getDictionary } from '../translations';
 
-interface ResumePageProps {
-  params: {
-    locale: string;
-  };
-}
+type LocalePromise = Promise<{ locale: string }>;
 
-export default function ResumePage({ params }: ResumePageProps) {
-  const dictionary = getDictionary(params.locale);
+export default async function ResumePage({ params }: { params: LocalePromise }) {
+  const { locale } = await params;
+  const dictionary = getDictionary(locale);
   const copy = dictionary.pages.resume;
 
   return (
