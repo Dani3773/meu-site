@@ -1,9 +1,24 @@
 import './globals.css';
-import { ReactNode } from 'react';
+import Link from 'next/link';
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
+
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'Sobre' },
+  { href: '/projects', label: 'Projetos' },
+  { href: '/contact', label: 'Contato' },
+  { href: '/resume', label: 'Currículo' },
+] as const;
+
+export const metadata: Metadata = {
+  title: 'Daniel Felisberto — Java & Web',
+  description: 'Portfólio, projetos e contato. Desenvolvedor focado no plano Alemanha 2025–2027.',
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html>
+    <html lang="pt-BR">
       <head>
         {/* Plausible Analytics */}
         <script
@@ -26,7 +41,27 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
         />
       </head>
-      <body>{children}</body>
+      <body className="bg-white text-zinc-900">
+        <div className="mx-auto max-w-3xl space-y-8 p-6">
+          <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1">
+              <Link href="/" className="text-2xl font-semibold text-zinc-800 hover:text-sky-600">
+                Daniel Felisberto
+              </Link>
+              <p className="text-sm text-zinc-500">Portfolio em construção para o plano Alemanha 2025–2027.</p>
+            </div>
+            <nav className="flex flex-wrap gap-4 text-sm font-medium">
+              {navItems.map((item) => (
+                <Link key={item.href} href={item.href} className="transition-colors hover:text-sky-600">
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </header>
+
+          <main className="rounded-lg border border-zinc-200 p-6 shadow-sm">{children}</main>
+        </div>
+      </body>
     </html>
   );
 }
