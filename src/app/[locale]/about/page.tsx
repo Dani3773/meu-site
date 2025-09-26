@@ -1,14 +1,14 @@
 ﻿import { getDictionary } from '../translations';
 
-interface ResumePageProps {
+interface AboutPageProps {
   params: {
     locale: string;
   };
 }
 
-export default function ResumePage({ params }: ResumePageProps) {
+export default function AboutPage({ params }: AboutPageProps) {
   const dictionary = getDictionary(params.locale);
-  const copy = dictionary.pages.resume;
+  const copy = dictionary.pages.about;
 
   return (
     <article className="space-y-4">

@@ -1,21 +1,14 @@
-const messages = {
-  pt: {
-    title: 'Bem-vindo',
-    description: 'Este é um exemplo de aplicação multilíngue.',
-  },
-  en: {
-    title: 'Welcome',
-    description: 'This is a multilingual application example.',
-  },
-  de: {
-    title: 'Willkommen',
-    description: 'Dies ist ein Beispiel für eine mehrsprachige Anwendung.',
-  },
-};
+﻿import { getDictionary } from './translations';
 
-export function generateMetadata({ params }: { params: { locale: string } }) {
-  const { locale } = params;
-  const { title, description } = messages[locale as keyof typeof messages];
+interface MetadataParams {
+  params: {
+    locale: string;
+  };
+}
+
+export function generateMetadata({ params }: MetadataParams) {
+  const dictionary = getDictionary(params.locale);
+  const { title, description } = dictionary.pages.home;
 
   return {
     title,

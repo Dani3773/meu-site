@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+﻿import { create } from 'zustand';
 
 interface LanguageState {
   currentLanguage: string;
@@ -6,7 +6,7 @@ interface LanguageState {
 }
 
 const useLanguageStore = create<LanguageState>((set) => ({
-  currentLanguage: 'en', // Idioma padrão
+  currentLanguage: 'pt',
   setLanguage: (language) => set({ currentLanguage: language }),
 }));
 

@@ -1,75 +1,77 @@
-// src/app/[locale]/Layout.tsx
-import type { Metadata } from "next";
-import type { ReactNode } from "react";
+﻿"use client";
 
-export const dynamic = "force-static";
+import { ReactNode, useEffect, useMemo } from 'react';
+import Link from 'next/link';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import useLanguageStore from '@/store/languageStore';
+import { getDictionary } from './translations';
 
-const TEXTS = {
-  pt: {
-    title: "Daniel Felisberto — Java & Web (PT)",
-    desc: "Portfólio, projetos e contato. Desenvolvedor Java & Web no Brasil.",
-  },
-  en: {
-    title: "Daniel Felisberto — Java & Web (EN)",
-    desc: "Portfolio, projects and contact. Java & Web Developer based in Brazil.",
-  },
-  de: {
-    title: "Daniel Felisberto — Java & Web (DE)",
-    desc: "Portfolio, Projekte und Kontakt. Java- & Webentwickler aus Brasilien.",
-  },
-} as const;
-
-const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/+$/, "");
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { locale: string };
-}): Promise<Metadata> {
-  const l = (params.locale ?? "pt") as keyof typeof TEXTS;
-  const t = TEXTS[l];
-  const canonical = `${BASE}/${l}`;
-
-  return {
-    title: t.title,
-    description: t.desc,
-    alternates: {
-      canonical,
-      languages: {
-        pt: `${BASE}/pt`,
-        en: `${BASE}/en`,
-        de: `${BASE}/de`,
-        "x-default": BASE,
-      },
-    },
-    openGraph: {
-      type: "website",
-      url: canonical,
-      siteName: "Daniel Felisberto",
-      title: t.title,
-      description: t.desc,
-      images: [`${BASE}/og-${l}.png`],
-      locale: l,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: t.title,
-      description: t.desc,
-      images: [`${BASE}/og-${l}.png`],
-    },
+interface LocaleLayoutProps {
+  children: ReactNode;
+  params: {
+    locale: string;
   };
 }
 
-export default function LocaleLayout({
-  children,
-  params,
-}: {
-  children: ReactNode;
-  params: { locale: "pt" | "en" | "de" };
-}) {
+type NavKey = 'home' | 'about' | 'projects' | 'contact';
+
+interface NavItem {
+  key: NavKey;
+  href: (locale: string) => string;
+}
+
+const navItems: NavItem[] = [
+  {
+    key: 'home',
+    href: (locale) => `/${locale}`,
+  },
+  {
+    key: 'about',
+    href: (locale) => `/${locale}/about`,
+  },
+  {
+    key: 'projects',
+    href: (locale) => `/${locale}/projects`,
+  },
+  {
+    key: 'contact',
+    href: (locale) => `/${locale}/contact`,
+  },
+];
+
+export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
+  const { locale } = params;
+  const dictionary = useMemo(() => getDictionary(locale), [locale]);
+
+  const { setLanguage } = useLanguageStore();
+
+  useEffect(() => {
+    setLanguage(locale);
+  }, [locale, setLanguage]);
+
   return (
-    <html lang={params.locale}>
-      <body>{children}</body>
-    </html>
+    <main className="mx-auto max-w-3xl space-y-6 p-6">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm text-zinc-500">
+            <strong className="font-semibold text-zinc-700">{dictionary.labels.language}:</strong>{' '}
+            <code>{locale}</code>
+          </p>
+        </div>
+        <LanguageSwitcher label={dictionary.labels.switcher} />
+      </header>
+
+      <nav className="flex flex-wrap gap-4 text-sm font-medium">
+        {navItems.map((item) => (
+          <Link key={item.key} href={item.href(locale)} className="transition-colors hover:text-sky-600">
+            {dictionary.nav[item.key]}
+          </Link>
+        ))}
+      </nav>
+
+      <section className="rounded-lg border border-zinc-200 p-4 shadow-sm">
+        {children}
+      </section>
+    </main>
   );
 }
